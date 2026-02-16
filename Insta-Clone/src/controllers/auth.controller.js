@@ -1,104 +1,102 @@
 const userModel = require("../models/user.model");
-const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 async function loginController(req, res) {
-    const { email, username, password } = req.body;
+	const { email, username, password } = req.body;
 
-    const user = await userModel.findOne({
-        $or: [
-            {
-                email: email,
-            },
-            {
-                username: username,
-            },
-        ],
-    });
+	const user = await userModel.findOne({
+		$or: [
+			{
+				email: email,
+			},
+			{
+				username: username,
+			},
+		],
+	});
 
-    if (!user) {
-        return res.status(404).json({
-            message: "User Not Found",
-        });
-    }
+	if (!user) {
+		return res.status(404).json({
+			message: "User Not Found",
+		});
+	}
 
-    const hash = crypto.createHash("sha256").update(password).digest("hex");
+	const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    const isPasswordValid = hash == user.password;
+	if (!isPasswordValid) {
+		return res.status(401).json({
+			message: "Password Invalids",
+		});
+	}
 
-    if (!isPasswordValid) {
-        return res.status(401).json({
-            message: "Password Invalids",
-        });
-    }
+	const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+		expiresIn: "1d",
+	});
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "1d",
-    });
+	res.cookie("token", token);
 
-    res.cookie("token", token);
-
-    res.status(200).json({
-        message: "Logged In Succesfully",
-        user: {
-            username: user.username,
-            email: user.email,
-            bio: user.bio,
-            profileImage: user.profileImage,
-        },
-    });
+	res.status(200).json({
+		message: "Logged In Succesfully",
+		user: {
+			username: user.username,
+			email: user.email,
+			bio: user.bio,
+			profileImage: user.profileImage,
+		},
+	});
 }
 
 async function registerController(req, res) {
-    const { username, email, password, bio, profileImage } = req.body;
+	const { username, email, password, bio, profileImage } = req.body;
 
-    const isUserAlreadyExist = await userModel.findOne({
-        $or: [{ email }, { username }],
-    });
+	const isUserAlreadyExist = await userModel.findOne({
+		$or: [{ email }, { username }],
+	});
 
-    if (isUserAlreadyExist) {
-        return res.status(409).json({
-            message:
-                "User already exists" +
-                " " +
-                (isUserAlreadyExist.email == email
-                    ? "Email already exists"
-                    : "Username already exists"),
-        });
-    }
+	if (isUserAlreadyExist) {
+		return res.status(409).json({
+			message:
+				"User already exists" +
+				" " +
+				(isUserAlreadyExist.email == email
+					? "Email already exists"
+					: "Username already exists"),
+		});
+	}
 
-    const hash = crypto.createHash("sha256").update(password).digest("hex");
+	const hash = await bcrypt.hash(password, 10);
 
-    const user = await userModel.create({
-        username,
-        email,
-        bio,
-        profileImage,
-        password: hash,
-    });
+	const user = await userModel.create({
+		username,
+		email,
+		bio,
+		profileImage,
+		password: hash,
+	});
 
-    const token = jwt.sign(
-        {
-            id: user._id,
-        },
-        process.env.JWT_SECRET,
-        { expiresIn: "1d" },
-    );
+	const token = jwt.sign(
+		{
+			id: user._id,
+		},
+		process.env.JWT_SECRET,
+		{ expiresIn: "1d" },
+	);
 
-    res.cookie("token", token);
+	res.cookie("token", token);
 
-    res.status(201).json({
-        message: "User Registered Succesfully",
-        user: {
-            email: user.email,
-            username: user.username,
-            bio: user.bio,
-            profileImage: user.profileImage,
-        },
-    });
+	res.status(201).json({
+		message: "User Registered Succesfully",
+		user: {
+			email: user.email,
+			username: user.username,
+			bio: user.bio,
+			profileImage: user.profileImage,
+		},
+	});
 }
 
 module.exports = {
-    loginController,
-    registerController,
+	loginController,
+	registerController,
 };
