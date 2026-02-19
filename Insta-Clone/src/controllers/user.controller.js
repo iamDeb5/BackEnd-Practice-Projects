@@ -21,9 +21,22 @@ const followUserController = async (req, res) => {
 		});
 	}
 
+	const followRequestStatus = await followModel.findOne({
+		follower: followerUsername,
+		followee: followeeUsername,
+		status: "requested",
+	});
+	if (followRequestStatus) {
+		return res.status(200).json({
+			message: "You have already sent a follow request to this user",
+			follow: followRequestStatus,
+		});
+	}
+
 	const isAlreadyFollowing = await followModel.findOne({
 		follower: followerUsername,
 		followee: followeeUsername,
+		status: "accepted",
 	});
 
 	if (isAlreadyFollowing) {
@@ -36,10 +49,11 @@ const followUserController = async (req, res) => {
 	const followRecord = await followModel.create({
 		follower: followerUsername,
 		followee: followeeUsername,
+		status: "requested",
 	});
 
 	res.status(201).json({
-		message: `You are now following ${followeeUsername}`,
+		message: `You have sent a follow request to ${followeeUsername}`,
 		follow: followRecord,
 	});
 };
@@ -51,6 +65,7 @@ const unfollowUserController = async (req, res) => {
 	const isUserFollowing = await followModel.findOne({
 		follower: followerUsername,
 		followee: followeeUsername,
+		status: "accepted",
 	});
 
 	if (!isUserFollowing) {
@@ -66,7 +81,56 @@ const unfollowUserController = async (req, res) => {
 	});
 };
 
+const acceptFollowRequestController = async (req, res) => {
+	const followeeUsername = req.user.username;
+	const followerUsername = req.params.username;
+
+	const followRequest = await followModel.findOne({
+		follower: followerUsername,
+		followee: followeeUsername,
+		status: "requested",
+	});
+
+	if (!followRequest) {
+		return res.status(404).json({
+			message: "Follow request not found",
+		});
+	}
+	followRequest.status = "accepted";
+	await followRequest.save();
+
+	res.status(200).json({
+		message: `You have accepted the follow request from ${followerUsername}`,
+		follow: followRequest,
+	});
+};
+
+const rejectFollowRequestController = async (req, res) => {
+	const followeeUsername = req.user.username;
+	const followerUsername = req.params.username;
+
+	const followRequest = await followModel.findOne({
+		follower: followerUsername,
+		followee: followeeUsername,
+		status: "requested",
+	});
+
+	if (!followRequest) {
+		return res.status(404).json({
+			message: "Follow request not found",
+		});
+	}
+
+	await followModel.findByIdAndDelete(followRequest._id);
+
+	res.status(200).json({
+		message: `You have rejected the follow request from ${followerUsername}`,
+	});
+};
+
 module.exports = {
 	followUserController,
 	unfollowUserController,
+	acceptFollowRequestController,
+	rejectFollowRequestController,
 };
