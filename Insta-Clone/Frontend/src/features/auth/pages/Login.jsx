@@ -1,30 +1,31 @@
 import React, { useState } from "react";
 import "../style/form.scss";
-import { Link } from "react-router";
-import axios from "axios";
+import { Link, useNavigate } from "react-router";
+import { useAuth } from "../hooks/useAuth";
 
 const Login = () => {
+	const { user, loading, handleLogin } = useAuth();
+
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
+
+	const navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		axios
-			.post(
-				"http://localhost:3000/api/auth/login",
-				{
-					username,
-					password,
-				},
-				{
-					withCredentials: true,
-				},
-			)
-			.then((response) => {
-				console.log(response.data);
-			});
+		await handleLogin(username, password);
+
+		navigate("/");
 	};
+
+	if (loading) {
+		return (
+			<main>
+				<h1>Loading....</h1>
+			</main>
+		);
+	}
 
 	return (
 		<main>
@@ -43,7 +44,9 @@ const Login = () => {
 						name='password'
 						placeholder='Enter Password'
 					/>
-					<button type='submit'>Login</button>
+					<button className='button primary-button' type='submit'>
+						Login
+					</button>
 				</form>
 				<p>
 					Don't have an account?{" "}
