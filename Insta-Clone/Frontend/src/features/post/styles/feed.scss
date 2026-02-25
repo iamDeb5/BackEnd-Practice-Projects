@@ -1,0 +1,86 @@
+.feed-page {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    .feed {
+        max-width: 450px;
+        width: 100%;
+
+        .posts {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+
+            .post {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                padding-inline: 0.5rem;
+                padding-block: 0.5rem;
+                background-color: #1a1a1a;
+
+                .user {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.6rem;
+
+                    .img-wrapper {
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border: 2px solid rgba(255, 0, 0, 0);
+                        background: conic-gradient(from 30deg, rgb(192, 29, 0), rgb(173, 0, 95), rgb(255, 149, 0));
+                    }
+
+                    img {
+                        width: 2.5rem;
+                        aspect-ratio: 1/1;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        object-position: center;
+                    }
+                }
+
+
+                .icons {
+                    display: flex;
+                    justify-content: space-between;
+
+                    .left {
+                        display: flex;
+                        gap: 0.75rem;
+                    }
+
+                    .like {
+                        color: red;
+                    }
+
+                    svg {
+                        width: 1.5rem;
+                        aspect-ratio: 1/1;
+                        cursor: pointer;
+                        color: white;
+                    }
+
+                    button {
+                        background-color: transparent;
+                        border: none;
+                        outline: none;
+                    }
+                }
+
+                img {
+                    width: 100%;
+                    object-fit: cover;
+                    object-position: center;
+                    border-radius: 0.5rem;
+
+                }
+            }
+        }
+    }
+}

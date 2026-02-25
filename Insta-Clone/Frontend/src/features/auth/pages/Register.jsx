@@ -1,15 +1,28 @@
 import React, { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import axios from "axios";
+import { useAuth } from "../hooks/useAuth";
 
 const Register = () => {
+
+	const { loading, handleRegister } = useAuth();
+
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
+	const navigate = useNavigate();
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		await handleRegister(username, email, password);
+
+		navigate('/');
 	};
+
+	if (loading) {
+		return (<main><h1>Loading...</h1></main>)
+	}
 
 	return (
 		<main>
@@ -22,6 +35,7 @@ const Register = () => {
 						}}
 						type='text'
 						name='username'
+						id="username"
 						placeholder='Enter Username'
 					/>
 					<input
@@ -30,6 +44,7 @@ const Register = () => {
 						}}
 						type='email'
 						name='email'
+						id="email"
 						placeholder='Enter Email'
 					/>
 					<input
@@ -38,6 +53,7 @@ const Register = () => {
 						}}
 						type='password'
 						name='password'
+						id="password"
 						placeholder='Enter Password'
 					/>
 					<button className='button primary-button' type='submit'>
