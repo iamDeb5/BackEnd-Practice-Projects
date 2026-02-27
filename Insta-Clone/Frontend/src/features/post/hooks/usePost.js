@@ -1,10 +1,12 @@
 import { useContext, useEffect } from "react";
+import { useNavigate } from "react-router";
 import { PostContext } from "../post.context";
 import { getFeed, likePost, unlikePost } from "../services/post.api";
 import { createPost } from "../services/post.api";
 
 export const usePost = () => {
     const context = useContext(PostContext);
+    const navigate = useNavigate();
 
     const { loading, setLoading, post, setPost, feed, setFeed } = context;
 
@@ -15,6 +17,9 @@ export const usePost = () => {
             setFeed(data.posts.reverse());
         } catch (error) {
             console.error("Failed to fetch feed:", error);
+            if (error.response?.status === 401) {
+                navigate("/login");
+            }
         } finally {
             setLoading(false);
         }

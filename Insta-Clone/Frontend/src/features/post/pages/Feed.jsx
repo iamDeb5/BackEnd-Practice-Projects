@@ -11,7 +11,7 @@ const Feed = () => {
         handlegetFeed();
     }, []);
 
-    if (loading || !feed) {
+    if (loading) {
         return (
             <main>
                 <h1>Feed is Loading...</h1>
