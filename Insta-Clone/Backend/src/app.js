@@ -26,7 +26,7 @@ app.use("/api/posts", postRouter);
 app.use("/api/users", userRouter);
 
 /* Serve Frontend index.html for any unknown routes */
-app.get("(.*)", (req, res) => {
+app.use((req, res) => {
 	res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
