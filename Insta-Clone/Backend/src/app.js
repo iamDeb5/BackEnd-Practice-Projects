@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -23,5 +24,10 @@ const userRouter = require("./routes/user.routes");
 app.use("/api/auth", authRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/users", userRouter);
+
+/* Serve Frontend index.html for any unknown routes */
+app.get("*", (req, res) => {
+	res.sendFile(path.join(__dirname, "../public/index.html"));
+});
 
 module.exports = app;

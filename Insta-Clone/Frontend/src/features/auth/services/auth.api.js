@@ -1,13 +1,13 @@
 import axios from "axios";
 
 const api = axios.create({
-	baseURL: "https://insta-clone-1dta.onrender.com/api/auth",
+	baseURL: "",
 	withCredentials: true,
 });
 
 export async function register(username, email, password) {
 	try {
-		const response = await api.post("/register", {
+		const response = await api.post("/api/auth/register", {
 			username,
 			email,
 			password,
@@ -20,7 +20,7 @@ export async function register(username, email, password) {
 
 export async function login(username, password) {
 	try {
-		const response = await api.post("/login", {
+		const response = await api.post("/api/auth/login", {
 			username,
 			password,
 		});
@@ -32,7 +32,7 @@ export async function login(username, password) {
 
 export async function getMe() {
 	try {
-		const response = await api.get("/get-me");
+		const response = await api.get("/api/auth/get-me");
 		return response.data;
 	} catch (err) {
 		throw err;

@@ -9,31 +9,45 @@ export const usePost = () => {
     const { loading, setLoading, post, setPost, feed, setFeed } = context;
 
     const handlegetFeed = async () => {
-        setLoading(true);
-        const data = await getFeed();
-        setFeed(data.posts.reverse());
-        setLoading(false);
+        try {
+            setLoading(true);
+            const data = await getFeed();
+            setFeed(data.posts.reverse());
+        } catch (error) {
+            console.error("Failed to fetch feed:", error);
+        } finally {
+            setLoading(false);
+        }
     }
 
     const handleCreatePost = async (imageFile, caption) => {
-        setLoading(true);
-        const data = await createPost(imageFile, caption);
-        setFeed([data.post, ...feed]);
-        setLoading(false);
+        try {
+            setLoading(true);
+            const data = await createPost(imageFile, caption);
+            setFeed([data.post, ...feed]);
+        } catch (error) {
+            console.error("Failed to create post:", error);
+        } finally {
+            setLoading(false);
+        }
     }
 
     const handleLikePost = async (postId) => {
-
-        const data = await likePost(postId);
-        await handlegetFeed();
-
+        try {
+            const data = await likePost(postId);
+            await handlegetFeed();
+        } catch (error) {
+            console.error("Failed to like post:", error);
+        }
     }
 
     const handleUnlikePost = async (postId) => {
-
-        const data = await unlikePost(postId);
-        await handlegetFeed();
-
+        try {
+            const data = await unlikePost(postId);
+            await handlegetFeed();
+        } catch (error) {
+            console.error("Failed to unlike post:", error);
+        }
     }
 
     useEffect(() => {
