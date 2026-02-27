@@ -20,8 +20,8 @@ const postRouter = require("./routes/post.routes");
 const userRouter = require("./routes/user.routes");
 
 /* Using Routes */
-app.use("/api/auth", authRouter);
-app.use("/api/posts", postRouter);
-app.use("/api/users", userRouter);
+app.use("https://insta-clone-1dta.onrender.com/api/auth", authRouter);
+app.use("https://insta-clone-1dta.onrender.com/api/posts", postRouter);
+app.use("https://insta-clone-1dta.onrender.com/api/users", userRouter);
 
 module.exports = app;
