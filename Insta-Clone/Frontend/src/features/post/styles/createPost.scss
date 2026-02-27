@@ -1,0 +1,16 @@
+.post-image-label {
+    cursor: pointer;
+    border: 1px solid #dbdbdb;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    color: #0095f6;
+
+    &:hover {
+        opacity: 0.8;
+        transform: scale(1.05);
+        color: #0095f6;
+        border-color: #0095f6;
+    }
+}

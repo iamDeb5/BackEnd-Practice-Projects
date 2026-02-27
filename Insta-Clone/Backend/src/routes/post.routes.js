@@ -48,6 +48,17 @@ postRouter.post(
 	PostController.likePostController,
 );
 
+/**
+ * @route POST /api/posts/unlike/:postId
+ * @description Unlike a Post
+ * @access Private
+ */
+postRouter.post(
+	"/unlike/:postId",
+	identifyUser,
+	PostController.unlikePostController,
+);
+
 
 /**
  * @route GET /api/posts/feed

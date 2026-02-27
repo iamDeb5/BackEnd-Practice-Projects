@@ -12,6 +12,8 @@ app.use(
 	}),
 );
 
+app.use(express.static("./public"));
+
 /* Require Routes*/
 const authRouter = require("./routes/auth.routes");
 const postRouter = require("./routes/post.routes");
