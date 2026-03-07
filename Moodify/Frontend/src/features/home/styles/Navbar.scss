@@ -1,0 +1,466 @@
+$green: #4caf8a;
+$ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+.moodify-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  & {
+    @media (max-width: 768px) {
+      padding: 10px 16px;
+    }
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__wordmark {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #2d2d2d;
+    letter-spacing: -0.01em;
+    font-family: "Inter", sans-serif;
+
+    @media (max-width: 480px) {
+      display: none;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  // ── Avatar ────────────────────────────────────────────
+  &__avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+    background: linear-gradient(135deg, $green, #2e7d5e);
+
+    &:hover {
+      transform: scale(1.06);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    }
+  }
+
+  &__initials {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    font-family: "Inter", sans-serif;
+    letter-spacing: 0.03em;
+    user-select: none;
+  }
+
+  // ── Bell ─────────────────────────────────────────────
+  &__notif-wrap {
+    position: relative;
+  }
+
+  &__bell {
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 50%;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.07);
+      color: #1a1a2e;
+    }
+    &--active {
+      background: rgba($green, 0.1);
+      color: $green;
+    }
+
+    svg {
+      stroke: currentColor;
+    }
+  }
+
+  &__bell-dot {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #e53535;
+    border: 1.5px solid rgba(255, 255, 255, 0.9);
+  }
+
+  // ── Gear ─────────────────────────────────────────────
+  &__settings-wrap {
+    position: relative;
+  }
+
+  &__gear {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 50%;
+    transition:
+      background 0.2s ease,
+      transform 0.35s ease;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.07);
+      transform: rotate(45deg);
+    }
+    &--open {
+      background: rgba(0, 0, 0, 0.07);
+      transform: rotate(90deg);
+    }
+  }
+
+  // ── Shared dropdown shell ─────────────────────────────
+  &__dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    min-width: 220px;
+    background: rgba(255, 255, 255, 0.93);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.12),
+      0 2px 8px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    animation: dropdownFadeIn 0.15s $ease;
+    z-index: 300;
+
+    @media (max-width: 480px) {
+      position: fixed;
+      top: 64px; /* Just below the navbar */
+      left: 12px;
+      right: 12px;
+      width: auto;
+      min-width: 0;
+    }
+
+    // Notifications variant
+    &--notif {
+      min-width: 300px;
+      max-height: 400px;
+      overflow-y: auto;
+
+      @media (max-width: 480px) {
+        max-height: calc(100vh - 80px);
+      }
+    }
+  }
+
+  &__dropdown-header {
+    padding: 14px 16px 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__dropdown-name {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    font-family: "Inter", sans-serif;
+  }
+
+  &__dropdown-email {
+    font-size: 0.74rem;
+    color: #999;
+    font-family: "Inter", sans-serif;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    // Column layout for header when showing name + email stacked
+    .moodify-navbar__dropdown-header & {
+      flex-grow: 1;
+    }
+  }
+
+  &__dropdown-divider {
+    height: 1px;
+    background: rgba(0, 0, 0, 0.07);
+    margin: 0;
+  }
+
+  // Dropdown items
+  &__dropdown-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 16px;
+    background: none;
+    border: none;
+    font-size: 0.83rem;
+    font-weight: 500;
+    color: #3a3a4a;
+    font-family: "Inter", sans-serif;
+    cursor: pointer;
+    text-align: left;
+    transition:
+      background 0.15s ease,
+      color 0.15s ease;
+
+    svg {
+      flex-shrink: 0;
+      stroke: #aaa;
+      transition: stroke 0.15s ease;
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.04);
+      color: #1a1a2e;
+      svg {
+        stroke: $green;
+      }
+    }
+
+    &--active {
+      background: rgba($green, 0.06);
+      color: #1a1a2e;
+      svg {
+        stroke: $green;
+      }
+    }
+
+    &--danger {
+      color: #e53535;
+      svg {
+        stroke: #e53535;
+      }
+      &:hover {
+        background: rgba(229, 53, 53, 0.06);
+        color: #c82020;
+        svg {
+          stroke: #c82020;
+        }
+      }
+    }
+  }
+
+  // Notification count badge inside dropdown item
+  &__notif-badge {
+    margin-left: auto;
+    background: #e53535;
+    color: #fff;
+    font-size: 0.62rem;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    font-family: "Inter", sans-serif;
+  }
+
+  // "Mark all read" button in notif header
+  &__clear-btn {
+    margin-left: auto;
+    background: none;
+    border: none;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: $green;
+    cursor: pointer;
+    font-family: "Inter", sans-serif;
+    padding: 0;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  // Each notification row
+  &__notif-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    cursor: default;
+    transition: background 0.15s ease;
+    &:last-child {
+      border-bottom: none;
+    }
+    &:hover {
+      background: rgba(0, 0, 0, 0.02);
+    }
+  }
+
+  &__notif-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  &__notif-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__notif-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #1a1a2e;
+    font-family: "Inter", sans-serif;
+  }
+
+  &__notif-text {
+    font-size: 0.75rem;
+    color: #888;
+    font-family: "Inter", sans-serif;
+    line-height: 1.4;
+  }
+
+  &__notif-time {
+    font-size: 0.68rem;
+    color: #bbb;
+    font-family: "Inter", sans-serif;
+    margin-top: 2px;
+  }
+
+  // ── Appearance / Theme picker ─────────────────────────
+  &__themes {
+    background: rgba(0, 0, 0, 0.02);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 4px 0;
+  }
+
+  &__theme-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #3a3a4a;
+    font-family: "Inter", sans-serif;
+    text-align: left;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.04);
+    }
+    &--active {
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+  }
+
+  &__theme-swatch {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    border: 1.5px solid rgba(0, 0, 0, 0.08);
+  }
+
+  &__theme-label {
+    flex: 1;
+  }
+}
+
+// Stacked header layout for settings dropdown
+.moodify-navbar__dropdown:not(.moodify-navbar__dropdown--notif) {
+  .moodify-navbar__dropdown-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ── Dark / Light toggle button ──────────────────────────
+.moodify-navbar__theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.35s ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: #1a1a2e;
+    transform: rotate(22deg) scale(1.1);
+  }
+
+  svg {
+    display: block;
+  }
+}
+
+// Dark mode colour for toggle icon
+[data-theme="dark"] .moodify-navbar__theme-toggle {
+  color: #e0c84a;
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #f5d76e;
+  }
+}

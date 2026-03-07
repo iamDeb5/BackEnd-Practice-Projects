@@ -1,51 +1,30 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
-
-// ─── Tokens ──────────────────────────────────────────────────
-$bg: #0d0d14;
-$surface: rgba(255, 255, 255, 0.05);
-$border: rgba(255, 255, 255, 0.1);
-$accent-1: #a855f7;
-$accent-2: #ec4899;
-$accent-3: #6366f1;
-$text: #ffffff;
-$muted: rgba(255, 255, 255, 0.5);
-$radius-lg: 24px;
-$radius-md: 14px;
-$radius-sm: 8px;
-$blur: blur(20px);
+$green: #4caf8a;
+$greenDark: #2e7d5e;
 $ease: cubic-bezier(0.4, 0, 0.2, 1);
-$tr: 0.25s $ease;
 
-// ─── Keyframes ───────────────────────────────────────────────
-@keyframes rotateGlow {
-  0% {
-    background: linear-gradient(135deg, $accent-1, $accent-2);
-  }
-  33% {
-    background: linear-gradient(135deg, $accent-3, $accent-1);
-  }
-  66% {
-    background: linear-gradient(135deg, $accent-2, $accent-3);
-  }
-  100% {
-    background: linear-gradient(135deg, $accent-1, $accent-2);
+@keyframes spin-ring {
+  to {
+    transform: rotate(360deg);
   }
 }
-
-@keyframes artworkPulse {
-  0%,
+@keyframes heartPop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.35);
+  }
+  70% {
+    transform: scale(0.9);
+  }
   100% {
     transform: scale(1);
   }
-  50% {
-    transform: scale(1.03);
-  }
 }
-
-@keyframes fadeSlideUp {
+@keyframes playerSlideUp {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -53,304 +32,461 @@ $tr: 0.25s $ease;
   }
 }
 
-// ─── Player ──────────────────────────────────────────────────
+/* ── Wrapper ─────────────────────────────────────────── */
 .player-wrapper {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 100;
-  padding: 0 24px 24px;
-  display: flex;
-  justify-content: center;
+  padding: 0 0 0;
 }
 
+/* ── Main bar ────────────────────────────────────────── */
 .player {
-  width: 100%;
-  max-width: 780px;
-  background: rgba(13, 13, 20, 0.75);
-  backdrop-filter: $blur;
-  -webkit-backdrop-filter: $blur;
-  border: 1px solid $border;
-  border-radius: $radius-lg;
-  padding: 18px 24px;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 20px;
+  gap: 0;
+  padding: 14px 28px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border-top: 1px solid rgba(255, 255, 255, 0.7);
   box-shadow:
-    0 -4px 60px rgba($accent-1, 0.15),
-    0 8px 40px rgba(0, 0, 0, 0.6);
-  font-family: "Inter", sans-serif;
-  transition: box-shadow $tr;
+    0 -8px 32px rgba(0, 0, 0, 0.06),
+    0 -2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  animation: playerSlideUp 0.3s $ease;
 
-  &.playing {
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr auto;
+    padding: 10px 16px;
+    gap: 12px;
+  }
+
+  &--playing {
+    border-top-color: rgba($green, 0.3);
     box-shadow:
-      0 -4px 80px rgba($accent-1, 0.3),
-      0 8px 40px rgba(0, 0, 0, 0.6);
-  }
-
-  // ── Song Info
-  &__info {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    min-width: 0;
-  }
-
-  &__artwork-wrap {
-    position: relative;
-    width: 54px;
-    height: 54px;
-    flex-shrink: 0;
-
-    &::after {
-      content: "";
-      position: absolute;
-      inset: -3px;
-      border-radius: 15px;
-      background: linear-gradient(135deg, $accent-1, $accent-2);
-      z-index: -1;
-      opacity: 0;
-      transition: opacity $tr;
-    }
-
-    .player.playing & {
-      &::after {
-        opacity: 1;
-        animation: rotateGlow 4s linear infinite;
-      }
-    }
-  }
-
-  &__artwork {
-    width: 54px;
-    height: 54px;
-    border-radius: 12px;
-    object-fit: cover;
-    display: block;
-
-    .player.playing & {
-      animation: artworkPulse 3s ease-in-out infinite;
-    }
-  }
-
-  &__meta {
-    min-width: 0;
-  }
-
-  &__title {
-    color: $text;
-    font-size: 0.85rem;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin: 0 0 4px;
-  }
-
-  &__mood {
-    display: inline-block;
-    font-size: 0.68rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: $accent-1;
-    background: rgba($accent-1, 0.12);
-    padding: 2px 8px;
-    border-radius: 999px;
-    border: 1px solid rgba($accent-1, 0.25);
-  }
-
-  // ── Center
-  &__center {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-
-  &__controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  // ── Progress
-  &__progress {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  // ── Right
-  &__right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 10px;
+      0 -8px 32px rgba($green, 0.08),
+      0 -2px 8px rgba(0, 0, 0, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
   }
 }
 
-// ─── Control Buttons ─────────────────────────────────────────
-.ctrl-btn {
-  background: $surface;
-  border: 1px solid $border;
-  color: $text;
+/* ── LEFT section ────────────────────────────────────── */
+.player__left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* Album art */
+.player__art-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.player__art {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+  display: block;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  transition: border-radius 0.4s $ease;
+
+  .player--playing & {
+    border-radius: 50%;
+  }
+}
+
+/* Spinning ring when playing */
+.player__art-ring {
+  position: absolute;
+  inset: -5px;
   border-radius: 50%;
-  width: 38px;
-  height: 38px;
+  border: 2px solid transparent;
+  border-top-color: $green;
+  border-right-color: rgba($green, 0.4);
+  animation: spin-ring 2.4s linear infinite;
+  pointer-events: none;
+}
+
+/* Song meta */
+.player__meta {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.player__title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  max-width: 200px;
+}
+
+.player__mood-chip {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  background: rgba($green, 0.12);
+  color: $greenDark;
+  border-radius: 999px;
+  padding: 2px 9px;
+  font-family: "Inter", sans-serif;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba($green, 0.2);
+  width: fit-content;
+}
+
+/* Like button */
+.player__like {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ccc;
+  width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  font-size: 0.75rem;
-  font-family: "Inter", sans-serif;
-  font-weight: 600;
+  border-radius: 50%;
   transition:
-    background $tr,
-    transform $tr,
-    border-color $tr;
+    color 0.2s $ease,
+    background 0.2s $ease;
+  margin-left: 4px;
 
   svg {
-    width: 16px;
-    height: 16px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: scale(1.08);
-  }
-  &:active {
-    transform: scale(0.95);
+    color: #ff6b9d;
+    background: rgba(255, 107, 157, 0.08);
   }
 
-  // Skip variant
-  &--skip {
+  &--active {
+    color: #ff4081;
+    animation: heartPop 0.4s $ease;
+    &:hover {
+      color: #ff4081;
+    }
+  }
+}
+
+/* ── CENTER section ──────────────────────────────────── */
+.player__center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  width: 520px;
+  max-width: 52vw;
+
+  @media (max-width: 768px) {
+    width: auto;
+    max-width: none;
+    grid-column: 1 / -1;
+    order: 3;
+    width: 100%;
+  }
+}
+
+.player__controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  @media (max-width: 480px) {
+    /* Hide shuffle and repeat on very small screens to save space */
+    .ctrl-btn--icon {
+      display: none;
+    }
+  }
+}
+
+/* ── Shared ctrl-btn ─────────────────────────────────── */
+.ctrl-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition:
+    background 0.18s $ease,
+    color 0.18s $ease,
+    transform 0.15s $ease;
+  position: relative;
+
+  /* Icon buttons (shuffle, repeat, mute) */
+  &--icon {
     width: 34px;
     height: 34px;
-    font-size: 0.62rem;
-    flex-direction: column;
-    gap: 2px;
-    color: $muted;
+    color: #999;
+    svg {
+      width: 16px;
+      height: 16px;
+    }
 
     &:hover {
-      color: $text;
+      color: #1a1a2e;
+      background: rgba(0, 0, 0, 0.06);
     }
   }
 
-  // Play/Pause variant
-  &--play {
-    width: 52px;
-    height: 52px;
-    background: linear-gradient(135deg, $accent-1, $accent-2);
-    border: none;
-    box-shadow: 0 4px 20px rgba($accent-1, 0.4);
+  /* Active state (shuffle on / repeat on) */
+  &--active {
+    color: $green !important;
+  }
 
+  /* Small dot indicator under button */
+  &__dot {
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: $green;
+  }
+
+  /* Skip ±10s buttons */
+  &--skip {
+    width: 36px;
+    height: 36px;
+    color: #555;
+    svg {
+      width: 19px;
+      height: 19px;
+    }
+    &:hover {
+      color: #1a1a2e;
+      background: rgba(0, 0, 0, 0.06);
+    }
+    &:active {
+      transform: scale(0.92);
+    }
+  }
+
+  /* Big play/pause button */
+  &--play {
+    width: 50px;
+    height: 50px;
+    background: #1a1a2e;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
+    margin: 0 6px;
     svg {
       width: 20px;
       height: 20px;
+      margin-left: 2px;
     }
 
     &:hover {
-      background: linear-gradient(
-        135deg,
-        lighten($accent-1, 8%),
-        lighten($accent-2, 8%)
-      );
-      border: none;
-      box-shadow: 0 6px 28px rgba($accent-1, 0.6);
+      background: #2a2a40;
+      transform: scale(1.05);
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.28);
+    }
+    &:active {
+      transform: scale(0.97);
+    }
+
+    &-active {
+      background: $green;
+      box-shadow: 0 4px 16px rgba($green, 0.4);
+      svg {
+        margin-left: 0;
+      }
+      &:hover {
+        background: $greenDark;
+        box-shadow: 0 6px 22px rgba($green, 0.5);
+      }
     }
   }
 }
 
-.skip-label {
-  font-size: 0.55rem;
-  letter-spacing: 0.03em;
-  line-height: 1;
+/* ── Progress bar ────────────────────────────────────── */
+.player__progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
 }
 
-// ─── Progress Bar ─────────────────────────────────────────────
-.time-label {
-  color: $muted;
-  font-size: 0.7rem;
-  font-weight: 400;
-  white-space: nowrap;
+.player__time {
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: #aaa;
+  font-family: "Inter", sans-serif;
   min-width: 34px;
-  font-variant-numeric: tabular-nums;
+  text-align: center;
+  letter-spacing: 0.02em;
 }
 
 .progress-track {
   flex: 1;
   height: 4px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 999px;
-  cursor: pointer;
   position: relative;
-  overflow: visible;
+  cursor: pointer;
+  transition: height 0.2s $ease;
 
-  &:hover .progress-thumb {
-    transform: translateY(-50%) scale(1);
+  &:hover {
+    height: 6px;
+    .progress-thumb {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 }
 
 .progress-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
   height: 100%;
+  background: linear-gradient(90deg, $green, lighten($green, 12%));
   border-radius: 999px;
-  background: linear-gradient(90deg, $accent-3, $accent-1, $accent-2);
-  position: relative;
   transition: width 0.1s linear;
-  pointer-events: none;
+  display: flex;
+  align-items: center;
 }
 
 .progress-thumb {
   position: absolute;
-  right: -6px;
+  right: -5px;
   top: 50%;
   transform: translateY(-50%) scale(0);
   width: 12px;
   height: 12px;
-  background: #fff;
   border-radius: 50%;
-  box-shadow: 0 0 8px rgba($accent-1, 0.8);
-  transition: transform $tr;
+  background: $green;
+  box-shadow: 0 0 0 3px rgba($green, 0.25);
+  opacity: 0;
+  transition:
+    opacity 0.2s $ease,
+    transform 0.2s $ease;
 }
 
-// ─── Speed Control ────────────────────────────────────────────
-.speed-control {
+.progress-tooltip {
+  position: absolute;
+  top: -26px;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-size: 0.65rem;
+  font-family: "Inter", sans-serif;
+  padding: 2px 7px;
+  border-radius: 5px;
+  pointer-events: none;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+}
+
+/* ── RIGHT section ───────────────────────────────────── */
+.player__right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+
+  @media (max-width: 768px) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+/* Volume row */
+.player__vol-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  @media (max-width: 768px) {
+    display: none; /* Hide volume slider on mobile, rely on physical buttons */
+  }
+}
+
+.vol-track {
+  position: relative;
+  width: 80px;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 999px;
+  overflow: visible;
+
+  &:hover .vol-fill {
+    background: linear-gradient(90deg, $green, lighten($green, 12%));
+  }
+}
+
+.vol-fill {
+  position: absolute;
+  left: 0;
+  height: 100%;
+  background: rgba($green, 0.7);
+  border-radius: 999px;
+  pointer-events: none;
+  transition:
+    width 0.05s linear,
+    background 0.2s ease;
+}
+
+.vol-slider {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  opacity: 0;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  appearance: none;
+}
+
+/* ── Speed control ───────────────────────────────────── */
+.speed-ctrl {
   position: relative;
 }
 
 .speed-btn {
-  background: $surface;
-  border: 1px solid $border;
-  color: $muted;
-  border-radius: $radius-sm;
-  padding: 5px 10px;
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  padding: 4px 11px;
   font-size: 0.72rem;
-  font-family: "Inter", sans-serif;
   font-weight: 600;
+  color: #555;
   cursor: pointer;
-  letter-spacing: 0.04em;
+  font-family: "Inter", sans-serif;
   transition:
-    background $tr,
-    color $tr,
-    border-color $tr;
+    background 0.15s ease,
+    color 0.15s ease;
+  letter-spacing: 0.02em;
   white-space: nowrap;
 
   &:hover,
-  &.active {
-    background: rgba($accent-1, 0.15);
-    border-color: $accent-1;
-    color: $accent-1;
+  &--open {
+    background: rgba(0, 0, 0, 0.1);
+    color: #1a1a2e;
   }
 }
 
@@ -358,88 +494,40 @@ $tr: 0.25s $ease;
   position: absolute;
   bottom: calc(100% + 8px);
   right: 0;
-  background: #1a1a28;
-  border: 1px solid $border;
-  border-radius: $radius-md;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
   overflow: hidden;
-  min-width: 90px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-  animation: fadeSlideUp 0.15s $ease;
-  z-index: 200;
+  min-width: 110px;
+  animation: playerSlideUp 0.15s $ease;
+  z-index: 400;
 }
 
-.speed-option {
+.speed-opt {
   width: 100%;
-  background: none;
-  border: none;
-  color: $muted;
-  font-family: "Inter", sans-serif;
-  font-size: 0.8rem;
-  font-weight: 500;
-  padding: 9px 14px;
-  text-align: left;
-  cursor: pointer;
-  transition:
-    background $tr,
-    color $tr;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: $text;
-  }
-
-  &.selected {
-    color: $accent-1;
-    background: rgba($accent-1, 0.1);
-    font-weight: 600;
-  }
-}
-
-// ─── Volume ───────────────────────────────────────────────────
-.volume-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  background: none;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #3a3a4a;
+  font-family: "Inter", sans-serif;
+  cursor: pointer;
+  transition: background 0.12s ease;
   gap: 8px;
 
-  svg {
-    width: 15px;
-    height: 15px;
-    stroke: $muted;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    flex-shrink: 0;
-  }
-}
-
-.volume-slider {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 75px;
-  height: 3px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-  outline: none;
-  cursor: pointer;
-
-  &::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: $accent-1;
-    cursor: pointer;
-    box-shadow: 0 0 6px rgba($accent-1, 0.6);
+  &:hover {
+    background: rgba(0, 0, 0, 0.04);
   }
 
-  &::-moz-range-thumb {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: none;
-    background: $accent-1;
-    cursor: pointer;
+  &--active {
+    font-weight: 700;
+    color: $green;
   }
 }

@@ -13,12 +13,23 @@ const songSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
+  artist: {
+    type: String,
+    default: "",
+  },
   mood: {
     type: String,
     enum: {
-      values: ["sad", "happy", "surprised"],
-      message: "Invalid mood",
+      values: [
+        "sad",
+        "happy",
+        "surprised",
+        "angry",
+        "fearful",
+        "disgusted",
+        "neutral",
+      ],
+      message: "Invalid mood: {VALUE}",
     },
   },
 });

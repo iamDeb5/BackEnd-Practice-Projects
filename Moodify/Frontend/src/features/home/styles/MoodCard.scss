@@ -1,0 +1,395 @@
+/* ════════════════════════════════════════════════════════
+   SONG PANEL  — minimal, editorial, aesthetic
+   Replaces the old mood-card styles.
+════════════════════════════════════════════════════════ */
+
+$ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+/* ── Panel wrapper ────────────────────────────────────── */
+.song-panel {
+  display: flex;
+  flex-direction: column;
+  width: 340px;
+  max-width: 100%;
+  gap: 0;
+
+  @media (max-width: 480px) {
+    width: 100%;
+  }
+
+  /* ── Header ─────────────────────────────────────────── */
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  &__mood-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 13px 5px 10px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent, #4caf8a) 12%, transparent);
+    border: 1px solid
+      color-mix(in srgb, var(--accent, #4caf8a) 25%, transparent);
+    width: fit-content;
+    transition: background 0.4s ease;
+  }
+
+  &__mood-emoji {
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  &__mood-name {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent, #4caf8a);
+    font-family: "Inter", sans-serif;
+  }
+
+  &__caption {
+    font-size: 0.72rem;
+    color: var(--text-muted, rgba(0, 0, 0, 0.4));
+    font-family: "Inter", sans-serif;
+    letter-spacing: 0.01em;
+    padding-left: 2px;
+
+    [data-theme="dark"] & {
+      color: rgba(255, 255, 255, 0.35);
+    }
+  }
+
+  /* ── Thin accent divider ────────────────────────────── */
+  &__divider {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      var(--accent, #4caf8a) 0%,
+      transparent 100%
+    );
+    opacity: 0.35;
+    margin-bottom: 4px;
+    border-radius: 1px;
+
+    [data-theme="dark"] & {
+      opacity: 0.25;
+    }
+  }
+
+  /* ── Song list ──────────────────────────────────────── */
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    max-height: 280px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+
+    /* Hide scrollbars */
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  /* ── Empty state ─────────────────────────────────────── */
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 32px 16px;
+    text-align: center;
+  }
+
+  &__empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: color-mix(in srgb, currentColor 10%, transparent);
+    opacity: 0.8;
+    animation: emptyPulse 3s ease-in-out infinite;
+  }
+
+  &__empty-title {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-primary, #1a1a2e);
+    font-family: "Inter", sans-serif;
+    margin: 0;
+    [data-theme="dark"] & {
+      color: #e8eaf2;
+    }
+  }
+
+  &__empty-hint {
+    font-size: 0.72rem;
+    color: var(--text-muted, rgba(0, 0, 0, 0.4));
+    font-family: "Inter", sans-serif;
+    margin: 0;
+    line-height: 1.5;
+    [data-theme="dark"] & {
+      color: rgba(255, 255, 255, 0.35);
+    }
+  }
+
+  /* ── Footer ─────────────────────────────────────────── */
+  &__footer {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__cta {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-family: "Inter", sans-serif;
+    letter-spacing: 0.04em;
+    color: var(--accent, #4caf8a);
+    padding: 8px 0;
+    position: relative;
+    transition:
+      opacity 0.2s ease,
+      letter-spacing 0.2s ease;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 5px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: currentColor;
+      opacity: 0;
+      transform: scaleX(0);
+      transition:
+        opacity 0.2s ease,
+        transform 0.2s $ease;
+      transform-origin: left;
+    }
+
+    &:hover {
+      opacity: 0.75;
+      letter-spacing: 0.06em;
+      &::after {
+        opacity: 0.5;
+        transform: scaleX(1);
+      }
+    }
+  }
+}
+
+/* ── Song row ─────────────────────────────────────────── */
+.song-row {
+  display: grid;
+  grid-template-columns: 28px 36px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 4px;
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+  transition:
+    background 0.18s ease,
+    transform 0.15s ease;
+
+  /* subtle separator between rows */
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 74px; /* aligns after thumb */
+    right: 0;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.06);
+    transition: opacity 0.2s ease;
+
+    [data-theme="dark"] & {
+      background: rgba(255, 255, 255, 0.06);
+    }
+  }
+  &:last-child::after {
+    display: none;
+  }
+
+  &--hovered {
+    transform: translateX(2px);
+  }
+
+  /* playing state */
+  &--playing {
+    .song-row__title {
+      color: var(--accent, #4caf8a);
+      font-weight: 700;
+    }
+  }
+
+  /* ── Index / play ─────────────────────────────────── */
+  &__index {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+  }
+
+  &__num {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--text-muted, rgba(0, 0, 0, 0.3));
+    font-family: "Inter", sans-serif;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+
+    [data-theme="dark"] & {
+      color: rgba(255, 255, 255, 0.25);
+    }
+  }
+
+  &__play-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: iconPop 0.18s $ease both;
+  }
+
+  /* ── Thumbnail ────────────────────────────────────── */
+  &__thumb {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: border-radius 0.25s ease;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .song-row--hovered & {
+      border-radius: 50%;
+    }
+  }
+
+  /* ── Text ─────────────────────────────────────────── */
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-primary, #1a1a2e);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: "Inter", sans-serif;
+    transition: color 0.25s ease;
+
+    [data-theme="dark"] & {
+      color: #e8eaf2;
+    }
+  }
+
+  &__artist {
+    font-size: 0.7rem;
+    color: var(--text-muted, rgba(0, 0, 0, 0.4));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: "Inter", sans-serif;
+    transition: color 0.25s ease;
+
+    [data-theme="dark"] & {
+      color: rgba(255, 255, 255, 0.35);
+    }
+  }
+
+  /* ── Duration ─────────────────────────────────────── */
+  &__duration {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--text-muted, rgba(0, 0, 0, 0.3));
+    font-family: "Inter", sans-serif;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+
+    [data-theme="dark"] & {
+      color: rgba(255, 255, 255, 0.25);
+    }
+  }
+}
+
+/* ── Keyframes ────────────────────────────────────────── */
+@keyframes iconPop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ── Dark mode explicit overrides ────────────────────── */
+[data-theme="dark"] {
+  .song-panel__caption {
+    color: rgba(255, 255, 255, 0.35);
+  }
+  .song-row__title {
+    color: #e8eaf2;
+  }
+  .song-row__artist {
+    color: rgba(255, 255, 255, 0.38);
+  }
+  .song-row__num {
+    color: rgba(255, 255, 255, 0.28);
+  }
+  .song-row__duration {
+    color: rgba(255, 255, 255, 0.28);
+  }
+  // Removed .song-row--hovered to keep no background setting
+}
+
+/* ── Legacy class overrides (keep global.scss working) ── */
+.mood-card,
+[class*="mood-card"] {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+@keyframes emptyPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
