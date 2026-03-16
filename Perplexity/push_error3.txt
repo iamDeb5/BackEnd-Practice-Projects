@@ -1,0 +1,148 @@
+﻿git : remote: error: 
+GH013: Repository rule 
+violations found for 
+refs/heads/main.        
+At line:1 char:1
++ git push 2>&1 | 
+Out-File -Encoding utf8 
+push_error3.txt
++ ~~~~~~~~~~~~~
+    + CategoryInfo       
+       : NotSpecified:   
+  (remote: error: ...s   
+ /main.        :Strin    
+g) [], RemoteExcepti    
+on
+    + FullyQualifiedErro 
+   rId : NativeCommandE  
+  rror
+ 
+remote: 
+remote: - GITHUB PUSH 
+PROTECTION        
+remote:   ΓÇöΓÇöΓÇöΓÇöΓÇö
+ΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓ
+ÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇ
+öΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇö
+ΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓ
+ÇöΓÇöΓÇö        
+remote:     Resolve the 
+following violations 
+before pushing again     
+   
+remote: 
+remote:     - Push 
+cannot contain secrets   
+     
+remote: 
+remote:             
+remote:      (?) Learn 
+how to resolve a blocked 
+push        
+remote:      https://docs
+.github.com/code-security
+/secret-scanning/working-
+with-secret-scanning-and-
+push-protection/working-w
+ith-push-protection-from-
+the-command-line#resolvin
+g-a-blocked-push        
+remote:             
+remote:             
+remote:       ΓÇöΓÇö 
+Google OAuth Client ID ΓÇ
+öΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇö
+ΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓ
+ÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇ
+öΓÇöΓÇö        
+remote:        
+locations:        
+remote:          - 
+commit: b93f0c8f76661d16d
+863fb1e06398fa4f0333e29  
+      
+remote:            path: 
+Perplexity/.env:3        
+remote:             
+remote:        (?) To 
+push, remove secret from 
+commit(s) or follow this 
+URL to allow the secret. 
+       
+remote:        https://gi
+thub.com/iamDeb5/BackEnd-
+Practice-Projects/securit
+y/secret-scanning/unblock
+-secret/3B2Mw0UKhevvKU1Ko
+CYrHLYCiH2        
+remote:             
+remote:             
+remote:       ΓÇöΓÇö 
+Google OAuth Client 
+Secret ΓÇöΓÇöΓÇöΓÇöΓÇöΓÇö
+ΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓ
+ÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇ
+öΓÇö        
+remote:        
+locations:        
+remote:          - 
+commit: b93f0c8f76661d16d
+863fb1e06398fa4f0333e29  
+      
+remote:            path: 
+Perplexity/.env:4        
+remote:             
+remote:        (?) To 
+push, remove secret from 
+commit(s) or follow this 
+URL to allow the secret. 
+       
+remote:        https://gi
+thub.com/iamDeb5/BackEnd-
+Practice-Projects/securit
+y/secret-scanning/unblock
+-secret/3B2Mw0GfbpbyoH6fa
+19OyNOH1T6        
+remote:             
+remote:             
+remote:       ΓÇöΓÇö 
+Google OAuth Refresh 
+Token ΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓ
+ÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇ
+öΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇöΓÇö
+ΓÇö        
+remote:        
+locations:        
+remote:          - 
+commit: b93f0c8f76661d16d
+863fb1e06398fa4f0333e29  
+      
+remote:            path: 
+Perplexity/.env:5        
+remote:             
+remote:        (?) To 
+push, remove secret from 
+commit(s) or follow this 
+URL to allow the secret. 
+       
+remote:        https://gi
+thub.com/iamDeb5/BackEnd-
+Practice-Projects/securit
+y/secret-scanning/unblock
+-secret/3B2Mw5GxAUyqWkCWo
+3vnQmq7dWt        
+remote:             
+remote: 
+remote: 
+To https://github.com/iam
+Deb5/BackEnd-Practice-Pro
+jects.git
+ ! [remote rejected] 
+main -> main (push 
+declined due to 
+repository rule 
+violations)
+error: failed to push 
+some refs to 'https://git
+hub.com/iamDeb5/BackEnd-P
+ractice-Projects.git'
