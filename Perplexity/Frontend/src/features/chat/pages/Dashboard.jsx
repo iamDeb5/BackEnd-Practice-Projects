@@ -9,9 +9,12 @@ const Dashboard = () => {
 
   const chats = useSelector((state) => state.chat.chats);
   const currentChatId = useSelector((state) => state.chat.currentChatId);
+  const isLoading = useSelector((state) => state.chat.isLoading);
+  const error = useSelector((state) => state.chat.error);
 
   useEffect(() => {
     chat.initializeSocketConnection();
+    chat.loadChats();
   }, []);
 
   const handleSubmitMessage = (event) => {
@@ -22,7 +25,11 @@ const Dashboard = () => {
       return;
     }
 
-    chat.handleSendMessage({ message: trimmedMessage, chatId: currentChatId });
+    // Pass currentChatId for follow-up messages; null means start a new chat
+    chat.handleSendMessage({
+      message: trimmedMessage,
+      chatId: currentChatId || undefined,
+    });
     setChatInput("");
   };
 
@@ -34,14 +41,29 @@ const Dashboard = () => {
             Perplexity
           </h1>
 
-          <div className="space-y-2">
-            {Array.from({ length: 6 }).map((_, index) => (
+          <div className="mb-4">
+            <button
+              onClick={() => chat.handleNewChat()}
+              type="button"
+              className="flex w-full items-center gap-2 rounded-xl border border-white/40 bg-white/5 px-3 py-2.5 text-left text-sm font-semibold text-white/80 transition hover:bg-white/10 hover:text-white"
+            >
+              <span className="text-lg">+</span> New Chat
+            </button>
+          </div>
+
+          <div className="space-y-2 overflow-y-auto flex-1">
+            {Object.values(chats).map((chatItem) => (
               <button
-                key={index}
+                onClick={() => chat.handleSelectChat(chatItem.id)}
+                key={chatItem.id}
                 type="button"
-                className="w-full rounded-xl border border-white/60 bg-transparent px-3 py-2 text-left text-base font-medium text-white/90 transition hover:border-white hover:text-white"
+                className={`w-full rounded-xl border px-3 py-2 text-left text-base font-medium transition ${
+                  currentChatId === chatItem.id
+                    ? "border-white bg-white/10 text-white"
+                    : "border-white/60 bg-transparent text-white/90 hover:border-white hover:text-white"
+                }`}
               >
-                Chat title
+                {chatItem.title}
               </button>
             ))}
           </div>
@@ -49,9 +71,15 @@ const Dashboard = () => {
 
         <section className="relative max-w-3/5 mx-auto flex h-full min-w-0 flex-1 flex-col gap-4">
           <div className="messages flex-1 space-y-3 overflow-y-auto pr-1 pb-30">
-            {chats[currentChatId]?.messages.map((message) => (
+            {error && (
+              <p className="text-center text-sm text-red-400">{error}</p>
+            )}
+            {!currentChatId && !error && (
+              <p className="mt-10 text-center text-white/40">Start a new conversation below</p>
+            )}
+            {chats[currentChatId]?.messages.map((message, index) => (
               <div
-                key={message.id}
+                key={message._id ?? index}
                 className={`max-w-[82%] w-fit rounded-2xl px-4 py-3 text-sm md:text-base ${
                   message.role === "user"
                     ? "ml-auto rounded-br-none bg-white/12 text-white"
@@ -61,6 +89,13 @@ const Dashboard = () => {
                 <p>{message.content}</p>
               </div>
             ))}
+            {isLoading && (
+              <div className="mr-auto flex items-center gap-2 rounded-2xl border border-white/25 bg-[#0f1626] px-4 py-3 text-white/60">
+                <span className="animate-pulse">●</span>
+                <span className="animate-pulse delay-100">●</span>
+                <span className="animate-pulse delay-200">●</span>
+              </div>
+            )}
           </div>
 
           <footer className="rounded-3xl w-full absolute bottom-2 border border-white/60 bg-[#080b12] p-4 md:p-5">
@@ -73,14 +108,15 @@ const Dashboard = () => {
                 value={chatInput}
                 onChange={(event) => setChatInput(event.target.value)}
                 placeholder="Type your message..."
-                className="w-full rounded-2xl border border-white/50 bg-transparent px-4 py-3 text-lg text-white outline-none transition placeholder:text-white/45 focus:border-white/90"
+                disabled={isLoading}
+                className="w-full rounded-2xl border border-white/50 bg-transparent px-4 py-3 text-lg text-white outline-none transition placeholder:text-white/45 focus:border-white/90 disabled:opacity-50"
               />
               <button
                 type="submit"
-                disabled={!chatInput.trim()}
+                disabled={!chatInput.trim() || isLoading}
                 className="rounded-2xl border border-white/60 px-6 py-3 text-lg font-semibold text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Send
+                {isLoading ? "..." : "Send"}
               </button>
             </form>
           </footer>

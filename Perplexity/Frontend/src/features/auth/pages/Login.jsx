@@ -17,15 +17,13 @@ const Login = () => {
 	const submitForm = async (event) => {
 		event.preventDefault();
 
-		const payload = {
-			email,
-			password,
-		};
-
-		await handleLogin(payload);
-		navigate("/");
-
-		console.log("Login payload", payload);
+		const payload = { email, password };
+		try {
+			await handleLogin(payload);
+			navigate("/");
+		} catch {
+			// error is already stored in Redux by useAuth
+		}
 	};
 
 	if (!loading && user) {

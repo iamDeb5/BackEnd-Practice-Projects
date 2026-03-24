@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+.messages::-webkit-scrollbar {
+  width: 0;
+}
+
+.messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.messages::-webkit-scrollbar-thumb {
+  background: transparent;
+}

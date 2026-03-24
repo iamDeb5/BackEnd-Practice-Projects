@@ -23,6 +23,7 @@ export const useAuth = () => {
 			dispatch(setUser(data));
 		} catch (error) {
 			dispatch(setError(error.response?.data?.message || "Login Failed"));
+			throw error; // re-throw so Login page can catch and skip navigation
 		} finally {
 			dispatch(setLoading(false));
 		}
