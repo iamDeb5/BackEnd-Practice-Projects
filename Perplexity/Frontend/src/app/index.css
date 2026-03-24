@@ -1,13 +1,31 @@
 @import "tailwindcss";
 
-.messages::-webkit-scrollbar {
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hide scrollbars globally for a cleaner look */
+.messages::-webkit-scrollbar,
+aside::-webkit-scrollbar {
   width: 0;
 }
 
-.messages::-webkit-scrollbar-track {
+.messages::-webkit-scrollbar-track,
+aside::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.messages::-webkit-scrollbar-thumb {
+.messages::-webkit-scrollbar-thumb,
+aside::-webkit-scrollbar-thumb {
   background: transparent;
 }
+
+/* Bounce animation delays for typing indicator */
+@keyframes bounce-dot {
+  0%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-6px); }
+}
+
+[animation-delay\:150ms] { animation-delay: 150ms; }
+[animation-delay\:300ms] { animation-delay: 300ms; }
