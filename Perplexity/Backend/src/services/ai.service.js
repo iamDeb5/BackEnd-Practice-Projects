@@ -1,6 +1,14 @@
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-import { HumanMessage, SystemMessage, AIMessage } from "langchain";
+import {
+  HumanMessage,
+  SystemMessage,
+  AIMessage,
+} from "@langchain/core/messages";
+import { tool } from "@langchain/core/tools";
+import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { ChatMistralAI } from "@langchain/mistralai";
+import { z } from "zod";
+import { searchInternet } from "./internet.service.js";
 
 const geminiModel = new ChatGoogleGenerativeAI({
   model: "gemini-2.5-flash-lite",
@@ -12,17 +20,39 @@ const mistralModel = new ChatMistralAI({
   apiKey: process.env.MISTRAL_API_KEY,
 });
 
+const searchInternetTool = tool(
+  async ({ query }) => {
+    // LangChain passes the zod-parsed object { query }, not a raw string
+    return await searchInternet(query);
+  },
+  {
+    name: "search_internet",
+    description:
+      "Search the internet for up-to-date information. Use this for any question about current events, recent news, or real-time data.",
+    schema: z.object({
+      query: z.string().describe("The search query to look up on the internet"),
+    }),
+  },
+);
+
+const agent = createReactAgent({
+  llm: geminiModel,
+  tools: [searchInternetTool],
+});
+
 export const generateResponse = async (messages) => {
-  const response = await geminiModel.invoke(
-    messages.map((msg) => {
-      if (msg.role == "user") {
+  const response = await agent.invoke({
+    messages: messages.map((msg) => {
+      if (msg.role === "user") {
         return new HumanMessage(msg.content);
-      } else if (msg.role == "ai") {
+      } else if (msg.role === "ai") {
         return new AIMessage(msg.content);
       }
     }),
-  );
-  return response.text;
+  });
+  // The last message in the output is the final AI reply
+  const lastMessage = response.messages[response.messages.length - 1];
+  return lastMessage.content;
 };
 
 export const generateChatTitle = async (message) => {
