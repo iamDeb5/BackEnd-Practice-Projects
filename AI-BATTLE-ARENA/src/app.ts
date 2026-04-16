@@ -1,14 +1,14 @@
 import express from "express";
-import useGraph from "./services/graph.ai.service.js";
+import runGraph from "./ai/graph.ai.js";
 
 const app = express();
 
-app.get("/health", (req, res) => {
-  res.status(200).json({ status: "OK" });
-});
+app.get("/", async (req, res) => {
+	const result = await runGraph(
+		"Write a function to get weather data for a given city.",
+	);
 
-app.post("/use-graph", async (req, res) => {
-  await useGraph("What is the capital of France?");
+	res.json(result);
 });
 
 export default app;
