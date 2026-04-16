@@ -4,6 +4,7 @@ import EmptyState from "../components/chat/EmptyState";
 import MessageItem from "../components/chat/MessageItem";
 import ChatInput from "../components/chat/ChatInput";
 import { generateMockResponse } from "../services/mockApi";
+import axios from "axios";
 
 export default function App() {
   const [messages, setMessages] = useState([]);
@@ -29,11 +30,16 @@ export default function App() {
       },
     ]);
 
-    const response = await generateMockResponse(userMessage);
+    const response = await axios.post("http://localhost:3000/invoke", {
+      input: userMessage,
+    });
+
+    const data = response.data;
+    console.log(data);
 
     setMessages((prev) =>
       prev.map((msg) =>
-        msg.id === newMessageId ? { ...msg, ...response, status: "done" } : msg,
+        msg.id === newMessageId ? { ...msg, ...data, status: "done" } : msg,
       ),
     );
   };
