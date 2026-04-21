@@ -9,7 +9,7 @@ export const useAuth = () => {
     email,
     contact,
     password,
-    fullname,
+    fullName,
     isSeller = false,
   }) => {
     try {
@@ -18,7 +18,7 @@ export const useAuth = () => {
         email,
         contact,
         password,
-        fullname,
+        fullName,
         isSeller,
       });
       dispatch(setUser(data.user));

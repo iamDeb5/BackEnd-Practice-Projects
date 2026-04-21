@@ -39,7 +39,7 @@ export const register = async (req, res) => {
       contact,
       password,
       fullName,
-      role: isSeller ? "SELLER" : "BUYER",
+      role: isSeller ? "seller" : "buyer",
     });
 
     await sendTokenResponse(user, res, "User registered successfully");

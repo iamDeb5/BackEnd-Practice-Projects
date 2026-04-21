@@ -9,7 +9,7 @@ export const register = async ({
   email,
   contact,
   password,
-  fullname,
+  fullName,
   isSeller,
 }) => {
   try {
@@ -17,7 +17,7 @@ export const register = async ({
       email,
       contact,
       password,
-      fullname,
+      fullName,
       isSeller,
     });
     return response.data;
