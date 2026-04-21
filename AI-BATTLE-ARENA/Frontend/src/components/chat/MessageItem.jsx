@@ -1,5 +1,5 @@
 import React from "react";
-import { User, Loader2 } from "lucide-react";
+import { User, Loader2, AlertCircle } from "lucide-react";
 import SolutionCard from "./SolutionCard";
 import JudgementSection from "./JudgementSection";
 
@@ -27,6 +27,13 @@ export default function MessageItem({ msg }) {
           <Loader2 className="w-4 h-4 animate-spin" />
           <span className="text-sm font-light">
             Synthesizing solutions and awaiting judgement...
+          </span>
+        </div>
+      ) : msg.status === "error" ? (
+        <div className="flex items-center gap-4 pl-14 text-rose-500">
+          <AlertCircle className="w-4 h-4" />
+          <span className="text-sm font-medium">
+            Evaluation failed. Please try again later.
           </span>
         </div>
       ) : (
