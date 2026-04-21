@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { register } from "../service/auth.api.js";
+import { register, login } from "../service/auth.api.js";
 import { setLoading, setError, setUser } from "../state/auth.slice.js";
 
 export const useAuth = () => {
@@ -24,12 +24,34 @@ export const useAuth = () => {
       dispatch(setUser(data.user));
       return data;
     } catch (error) {
-      dispatch(setError(error.message));
-      throw error;
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.errors?.[0]?.msg ||
+        error.message;
+      dispatch(setError(errorMessage));
+      throw new Error(errorMessage);
     } finally {
       dispatch(setLoading(false));
     }
   };
 
-  return { handleRegister };
+  const handleLogin = async ({ email, password }) => {
+    try {
+      dispatch(setLoading(true));
+      const data = await login({ email, password });
+      dispatch(setUser(data.user));
+      return data;
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.errors?.[0]?.msg ||
+        error.message;
+      dispatch(setError(errorMessage));
+      throw new Error(errorMessage);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
+  return { handleRegister, handleLogin };
 };

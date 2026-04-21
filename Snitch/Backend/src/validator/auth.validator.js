@@ -28,3 +28,9 @@ export const validateRegisterUser = [
   body("isSeller").isBoolean().withMessage("isSeller must be a boolean"),
   validateRequest,
 ];
+
+export const validateLoginUser = [
+  body("email").isEmail().withMessage("Invalid Email Format"),
+  body("password").notEmpty().withMessage("Password is required"),
+  validateRequest,
+];

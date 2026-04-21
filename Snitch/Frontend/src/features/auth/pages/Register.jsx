@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 const Register = () => {
   const navigate = useNavigate();
   const { handleRegister } = useAuth();
+  const [errorMsg, setErrorMsg] = useState("");
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -23,21 +24,20 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await handleRegister({
-      email: formData.email,
-      contact: formData.contactNumber,
-      password: formData.password,
-      fullName: formData.fullName,
-      isSeller: formData.isSeller,
-    });
-    setFormData({
-      fullName: "",
-      email: "",
-      contactNumber: "",
-      password: "",
-      isSeller: false,
-    });
-    navigate("/");
+    setErrorMsg("");
+    try {
+      await handleRegister({
+        email: formData.email,
+        contact: formData.contactNumber,
+        password: formData.password,
+        fullName: formData.fullName,
+        isSeller: formData.isSeller,
+      });
+      console.log("Form Data:", formData);
+      navigate("/login");
+    } catch (err) {
+      setErrorMsg(err.message);
+    }
   };
 
   return (
@@ -76,6 +76,11 @@ const Register = () => {
             <p className="text-[#a19f9d] text-base lg:text-lg font-light">
               Elevate your wardrobe. Create an account below.
             </p>
+            {errorMsg && (
+              <div className="mt-4 p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-sm">
+                {errorMsg}
+              </div>
+            )}
           </div>
 
           <form
@@ -196,7 +201,7 @@ const Register = () => {
 
             <button
               type="submit"
-              className="w-full mt-4 bg-gradient-to-r from-[#ffe4af] to-[#ffc107] hover:from-[#ffc107] hover:to-[#fabd00] text-[#261a00] font-semibold text-lg rounded-full py-3 transition-all duration-300 transform hover:-translate-y-0.5 shadow-[0_4px_20px_rgba(255,193,7,0.15)] hover:shadow-[0_8px_30px_rgba(255,193,7,0.25)] focus:outline-none"
+              className="w-full mt-4 bg-gradient-to-r from-[#ffe4af] to-[#ffc107] hover:from-[#ffc107] hover:to-[#fabd00] text-[#261a00] font-semibold text-lg rounded-full py-3 transition-all duration-300 transform hover:-translate-y-0.5 shadow-[0_4px_20px_rgba(255,193,7,0.15)] hover:shadow-[0_8px_30px_rgba(255,193,7,0.25)] focus:outline-none cursor-pointer"
             >
               Create Account
             </button>
@@ -204,7 +209,10 @@ const Register = () => {
             <div className="text-center mt-4 pb-2 lg:pb-0">
               <p className="text-[#9c8f78] text-sm md:text-[15px]">
                 Already have an account?{" "}
-                <span className="text-[#ffc107] hover:underline cursor-pointer font-medium">
+                <span
+                  onClick={() => navigate("/login")}
+                  className="cursor-pointer text-[#ffc107] hover:underline font-medium"
+                >
                   Sign in
                 </span>
               </p>
