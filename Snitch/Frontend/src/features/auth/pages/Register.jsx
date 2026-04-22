@@ -199,6 +199,8 @@ const Register = () => {
               </div>
             </div>
 
+            <a href="/api/auth/google">Sign in with Google</a>
+
             <button
               type="submit"
               className="w-full mt-4 bg-gradient-to-r from-[#ffe4af] to-[#ffc107] hover:from-[#ffc107] hover:to-[#fabd00] text-[#261a00] font-semibold text-lg rounded-full py-3 transition-all duration-300 transform hover:-translate-y-0.5 shadow-[0_4px_20px_rgba(255,193,7,0.15)] hover:shadow-[0_8px_30px_rgba(255,193,7,0.25)] focus:outline-none cursor-pointer"
