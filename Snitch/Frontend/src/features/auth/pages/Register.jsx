@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../hook/useAuth.js";
 import { useNavigate } from "react-router";
+import ContinueWithGoogle from "../components/ContinueWithGoogle.jsx";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -67,17 +68,17 @@ const Register = () => {
       </div>
 
       {/* Right Panel - Form Area */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-10 lg:p-16 xl:p-24 bg-[#0e0e0e] overflow-y-auto lg:overflow-hidden">
-        <div className="w-full max-w-md xl:max-w-lg bg-[#131313] lg:bg-transparent rounded-3xl p-8 lg:p-0 border border-[#201f1f] lg:border-none shadow-2xl lg:shadow-none">
-          <div className="mb-8">
-            <h1 className="text-4xl lg:text-5xl font-light mb-3 tracking-wide">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 lg:p-12 xl:p-20 bg-[#0e0e0e] overflow-y-auto lg:overflow-hidden">
+        <div className="w-full max-w-md xl:max-w-lg bg-[#131313] lg:bg-transparent rounded-3xl p-6 lg:p-0 border border-[#201f1f] lg:border-none shadow-2xl lg:shadow-none">
+          <div className="mb-5">
+            <h1 className="text-3xl lg:text-4xl font-light mb-2 tracking-wide">
               Join <span className="font-semibold text-[#ffc107]">Snitch</span>
             </h1>
-            <p className="text-[#a19f9d] text-base lg:text-lg font-light">
+            <p className="text-[#a19f9d] text-base font-light">
               Elevate your wardrobe. Create an account below.
             </p>
             {errorMsg && (
-              <div className="mt-4 p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-sm">
+              <div className="mt-3 p-2.5 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-sm">
                 {errorMsg}
               </div>
             )}
@@ -85,7 +86,7 @@ const Register = () => {
 
           <form
             onSubmit={handleSubmit}
-            className="space-y-4 md:space-y-5 flex flex-col"
+            className="space-y-3 md:space-y-4 flex flex-col"
           >
             <div className="space-y-1.5">
               <label
@@ -101,7 +102,7 @@ const Register = () => {
                 value={formData.fullName}
                 onChange={handleChange}
                 placeholder="Enter your full name"
-                className="w-full bg-[#1c1b1b] text-white border border-transparent focus:border-[#ffc107] transition-all rounded-xl px-4 py-3 focus:outline-none focus:bg-[#201f1f]"
+                className="w-full bg-[#1c1b1b] text-white border border-transparent focus:border-[#ffc107] transition-all rounded-xl px-4 py-2.5 focus:outline-none focus:bg-[#201f1f]"
                 required
               />
             </div>
@@ -120,7 +121,7 @@ const Register = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="you@example.com"
-                className="w-full bg-[#1c1b1b] text-white border border-transparent focus:border-[#ffc107] transition-all rounded-xl px-4 py-3 focus:outline-none focus:bg-[#201f1f]"
+                className="w-full bg-[#1c1b1b] text-white border border-transparent focus:border-[#ffc107] transition-all rounded-xl px-4 py-2.5 focus:outline-none focus:bg-[#201f1f]"
                 required
               />
             </div>
@@ -141,7 +142,7 @@ const Register = () => {
                 placeholder="1234567890"
                 pattern="[0-9]{10}"
                 title="Contact must be a 10-digit number"
-                className="w-full bg-[#1c1b1b] text-white border border-transparent focus:border-[#ffc107] transition-all rounded-xl px-4 py-3 focus:outline-none focus:bg-[#201f1f]"
+                className="w-full bg-[#1c1b1b] text-white border border-transparent focus:border-[#ffc107] transition-all rounded-xl px-4 py-2.5 focus:outline-none focus:bg-[#201f1f]"
                 required
               />
             </div>
@@ -160,14 +161,14 @@ const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className="w-full bg-[#1c1b1b] text-white border border-transparent focus:border-[#ffc107] transition-all rounded-xl px-4 py-3 focus:outline-none focus:bg-[#201f1f]"
+                className="w-full bg-[#1c1b1b] text-white border border-transparent focus:border-[#ffc107] transition-all rounded-xl px-4 py-2.5 focus:outline-none focus:bg-[#201f1f]"
                 required
               />
             </div>
 
             {/* isSeller Checkbox */}
             <div
-              className="flex items-center mt-2 group cursor-pointer select-none"
+              className="flex items-center mt-1 group cursor-pointer select-none"
               onClick={() =>
                 setFormData((p) => ({ ...p, isSeller: !p.isSeller }))
               }
@@ -199,16 +200,16 @@ const Register = () => {
               </div>
             </div>
 
-            <a href="/api/auth/google">Sign in with Google</a>
-
             <button
               type="submit"
-              className="w-full mt-4 bg-gradient-to-r from-[#ffe4af] to-[#ffc107] hover:from-[#ffc107] hover:to-[#fabd00] text-[#261a00] font-semibold text-lg rounded-full py-3 transition-all duration-300 transform hover:-translate-y-0.5 shadow-[0_4px_20px_rgba(255,193,7,0.15)] hover:shadow-[0_8px_30px_rgba(255,193,7,0.25)] focus:outline-none cursor-pointer"
+              className="w-full mt-3 bg-gradient-to-r from-[#ffe4af] to-[#ffc107] hover:from-[#ffc107] hover:to-[#fabd00] text-[#261a00] font-semibold text-lg rounded-full py-2.5 transition-all duration-300 transform hover:-translate-y-0.5 shadow-[0_4px_20px_rgba(255,193,7,0.15)] hover:shadow-[0_8px_30px_rgba(255,193,7,0.25)] focus:outline-none cursor-pointer"
             >
               Create Account
             </button>
 
-            <div className="text-center mt-4 pb-2 lg:pb-0">
+            <ContinueWithGoogle />
+
+            <div className="text-center mt-3 pb-2 lg:pb-0">
               <p className="text-[#9c8f78] text-sm md:text-[15px]">
                 Already have an account?{" "}
                 <span
