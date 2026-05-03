@@ -22,8 +22,8 @@ const router = express.Router();
 router.post(
 	"/",
 	authenticateSeller,
-	createProductValidator,
 	upload.array("images", 7),
+	createProductValidator,
 	createProduct,
 );
 
