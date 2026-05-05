@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../hook/useAuth.js";
 import { useNavigate } from "react-router";
 import ContinueWithGoogle from "../components/ContinueWithGoogle.jsx";
@@ -34,7 +34,6 @@ const Register = () => {
         fullName: formData.fullName,
         isSeller: formData.isSeller,
       });
-      console.log("Form Data:", formData);
       navigate("/login");
     } catch (err) {
       setErrorMsg(err.message);
@@ -42,189 +41,213 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen lg:h-screen lg:overflow-hidden bg-[#0e0e0e] text-[#e5e2e1] flex flex-col lg:flex-row font-sans">
-      {/* Left Panel - Image Area (Desktop Only) */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-[#131313] items-center justify-center overflow-hidden">
+    /*
+     * ROOT — h-screen + overflow-hidden locks the whole page to viewport height.
+     * Nothing can push outside of it, so no page-level scroll ever appears.
+     */
+    <div
+      className="h-screen overflow-hidden flex flex-col lg:flex-row"
+      style={{ fontFamily: "'Inter', sans-serif" }}
+    >
+      {/* ── LEFT — editorial photo panel ─────────────────────────────────── */}
+      <div className="hidden lg:block lg:w-[48%] xl:w-1/2 relative flex-shrink-0">
         <img
-          src="https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=2000&auto=format&fit=crop"
-          alt="Fashion Experience"
-          className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay"
+          src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=90&w=2070&auto=format&fit=crop&crop=top"
+          alt="Snitch fashion"
+          className="absolute inset-0 w-full h-full object-cover object-top"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e] via-[#0e0e0e]/20 to-transparent"></div>
 
-        {/* Seamless blend gradient on the right edge */}
-        <div className="absolute inset-y-0 right-0 w-64 bg-gradient-to-l from-[#0e0e0e] to-transparent z-10 pointer-events-none"></div>
+        {/* Bottom fade — dark for legibility of copy */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/5 to-transparent" />
 
-        <div className="absolute bottom-16 left-12 lg:bottom-20 lg:left-20 max-w-lg z-20">
-          <div className="w-16 h-1 bg-[#ffc107] mb-5 rounded-full"></div>
-          <h2 className="text-5xl lg:text-6xl font-light mb-5 text-white leading-tight">
-            Define your <br /> <span className="font-semibold">style.</span>
+        {/*
+         * ── RIGHT-EDGE GRADIENT ──
+         * This is what creates the seamless "photo bleeding into form" effect.
+         * A div positioned on the right edge of the photo panel, fading from
+         * transparent → #FAF8F5 (the form panel's background color).
+         */}
+        <div
+          className="absolute inset-y-0 right-0 w-36 z-10 pointer-events-none"
+          style={{
+            background: "linear-gradient(to right, transparent, #FAF8F5)",
+          }}
+        />
+
+        {/* Bottom copy */}
+        <div className="absolute bottom-10 left-10 xl:left-14 right-16 z-10">
+          <p className="text-white/50 text-[10px] tracking-[0.25em] uppercase mb-3 font-light">
+            Snitch — Fashion Forward
+          </p>
+          <h2
+            className="text-white leading-[1.12] mb-3"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "clamp(2rem, 3vw, 3.2rem)",
+            }}
+          >
+            Define your <br />
+            <em>aesthetic.</em>
           </h2>
-          <p className="text-[#d4c5ab] text-lg lg:text-xl font-light leading-relaxed">
-            Join the exclusive community of creators and shoppers leading modern
-            fashion.
+          <p className="text-white/50 text-xs leading-relaxed max-w-[220px] font-light">
+            Join the exclusive movement of creators and brands redefining modern fashion.
           </p>
         </div>
       </div>
 
-      {/* Right Panel - Form Area */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 lg:p-12 xl:p-20 bg-[#0e0e0e] overflow-y-auto lg:overflow-hidden">
-        <div className="w-full max-w-md xl:max-w-lg bg-[#131313] lg:bg-transparent rounded-3xl p-6 lg:p-0 border border-[#201f1f] lg:border-none shadow-2xl lg:shadow-none">
-          <div className="mb-5">
-            <h1 className="text-3xl lg:text-4xl font-light mb-2 tracking-wide">
-              Join <span className="font-semibold text-[#ffc107]">Snitch</span>
-            </h1>
-            <p className="text-[#a19f9d] text-base font-light">
-              Elevate your wardrobe. Create an account below.
-            </p>
-            {errorMsg && (
-              <div className="mt-3 p-2.5 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-sm">
-                {errorMsg}
-              </div>
-            )}
-          </div>
+      {/*
+       * ── RIGHT — form panel ──────────────────────────────────────────────
+       *
+       * KEY FIX: NO overflow-y-auto here.
+       * Instead:
+       *   • The panel uses h-full so it fills the parent (which is h-screen).
+       *   • Content is centered with items-center justify-center.
+       *   • Spacing inside the form is kept tight so everything fits.
+       *
+       * HOW TO DIAGNOSE SCROLL IN THE FUTURE:
+       *   1. Open DevTools → Elements → select the scrolling element.
+       *   2. Look for `overflow: auto` or `overflow-y: auto/scroll` in Styles.
+       *   3. Also check if a parent has a fixed height (h-screen) while the
+       *      child content is taller → scroll appears automatically.
+       *   4. Fix options:
+       *      a) Remove overflow-y-auto (content must fit the height).
+       *      b) Reduce padding/gap inside the form.
+       *      c) If content MUST scroll, keep overflow-y-auto but constrain
+       *         the scrollable area to a small sub-section, not the whole panel.
+       */}
+      <div
+        className="flex-1 h-full flex items-center justify-center px-8 sm:px-12 lg:px-12 xl:px-16"
+        style={{ backgroundColor: "#FAF8F5" }}
+      >
+        <div className="w-full max-w-[320px]">
 
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-3 md:space-y-4 flex flex-col"
+          {/* Eyebrow */}
+          <p
+            className="text-[10px] tracking-[0.22em] uppercase mb-2.5 font-semibold"
+            style={{ color: "#C9A96E" }}
           >
-            <div className="space-y-1.5">
-              <label
-                className="text-sm tracking-wide text-[#d4c5ab] ml-1"
-                htmlFor="fullName"
-              >
-                Full Name
-              </label>
-              <input
-                type="text"
-                id="fullName"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                placeholder="Enter your full name"
-                className="w-full bg-[#1c1b1b] text-white border border-transparent focus:border-[#ffc107] transition-all rounded-xl px-4 py-2.5 focus:outline-none focus:bg-[#201f1f]"
-                required
-              />
-            </div>
+            Welcome to Snitch
+          </p>
 
-            <div className="space-y-1.5">
-              <label
-                className="text-sm tracking-wide text-[#d4c5ab] ml-1"
-                htmlFor="email"
-              >
-                Email Address
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="you@example.com"
-                className="w-full bg-[#1c1b1b] text-white border border-transparent focus:border-[#ffc107] transition-all rounded-xl px-4 py-2.5 focus:outline-none focus:bg-[#201f1f]"
-                required
-              />
-            </div>
+          {/* Headline */}
+          <h1
+            className="mb-6 leading-tight text-[#1a1a1a]"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "clamp(1.65rem, 2.5vw, 2.2rem)",
+            }}
+          >
+            Elevate Your Style
+          </h1>
 
-            <div className="space-y-1.5">
-              <label
-                className="text-sm tracking-wide text-[#d4c5ab] ml-1"
-                htmlFor="contactNumber"
-              >
-                Contact Number
-              </label>
-              <input
-                type="tel"
-                id="contactNumber"
-                name="contactNumber"
-                value={formData.contactNumber}
-                onChange={handleChange}
-                placeholder="1234567890"
-                pattern="[0-9]{10}"
-                title="Contact must be a 10-digit number"
-                className="w-full bg-[#1c1b1b] text-white border border-transparent focus:border-[#ffc107] transition-all rounded-xl px-4 py-2.5 focus:outline-none focus:bg-[#201f1f]"
-                required
-              />
+          {/* Error */}
+          {errorMsg && (
+            <div className="mb-4 text-xs text-red-700 bg-red-50 border border-red-200 rounded px-3 py-2">
+              {errorMsg}
             </div>
+          )}
 
-            <div className="space-y-1.5">
-              <label
-                className="text-sm tracking-wide text-[#d4c5ab] ml-1"
-                htmlFor="password"
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="••••••••"
-                className="w-full bg-[#1c1b1b] text-white border border-transparent focus:border-[#ffc107] transition-all rounded-xl px-4 py-2.5 focus:outline-none focus:bg-[#201f1f]"
-                required
-              />
-            </div>
+          {/* Form — gap-4 keeps fields compact enough to fit in viewport */}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
-            {/* isSeller Checkbox */}
-            <div
-              className="flex items-center mt-1 group cursor-pointer select-none"
-              onClick={() =>
-                setFormData((p) => ({ ...p, isSeller: !p.isSeller }))
-              }
-            >
+            <UnderlineField
+              id="fullName" name="fullName" type="text"
+              label="Full Name" placeholder="e.g. John Doe"
+              value={formData.fullName} onChange={handleChange} required
+            />
+            <UnderlineField
+              id="contactNumber" name="contactNumber" type="tel"
+              label="Contact Number" placeholder="+91 98765 43210"
+              value={formData.contactNumber} onChange={handleChange}
+              pattern="[0-9]{10}" title="Enter a 10-digit number" required
+            />
+            <UnderlineField
+              id="email" name="email" type="email"
+              label="Email Address" placeholder="hello@example.com"
+              value={formData.email} onChange={handleChange} required
+            />
+            <UnderlineField
+              id="password" name="password" type="password"
+              label="Password" placeholder="••••••••"
+              value={formData.password} onChange={handleChange} required
+            />
+
+            {/* Seller checkbox */}
+            <label className="flex items-center gap-2.5 cursor-pointer select-none group">
               <div
-                className={`w-5 h-5 \n rounded flex items-center justify-center border transition-all duration-300 ${formData.isSeller ? "bg-[#ffc107] border-[#ffc107]" : "border-[#4f4632] group-hover:border-[#ffc107]"}`}
+                onClick={() => setFormData((p) => ({ ...p, isSeller: !p.isSeller }))}
+                className={[
+                  "w-3.5 h-3.5 border flex items-center justify-center transition-all duration-200 shrink-0",
+                  formData.isSeller
+                    ? "bg-[#1a1a1a] border-[#1a1a1a]"
+                    : "bg-transparent border-[#bbb] group-hover:border-[#1a1a1a]",
+                ].join(" ")}
               >
-                <svg
-                  className={`w-3.5 h-3.5 text-[#261a00] transform transition-transform duration-300 ${formData.isSeller ? "scale-100" : "scale-0"}`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={3}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+                {formData.isSeller && (
+                  <svg viewBox="0 0 12 9" fill="none" className="w-2 h-2">
+                    <path d="M1 4.5l3 3 7-7" stroke="#FAF8F5" strokeWidth="2"
+                      strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
               </div>
-              <div className="ml-3">
-                <span className="text-[#e5e2e1] text-[15px] font-medium leading-none">
-                  I want to register as a Seller
-                </span>
-                <p className="text-xs text-[#9c8f78] mt-1 hidden sm:block">
-                  Check this if you plan to sell clothes on Snitch.
-                </p>
-              </div>
-            </div>
+              <span className="text-[10px] tracking-[0.16em] uppercase text-[#666] font-medium">
+                Register as Seller
+              </span>
+            </label>
 
+            {/* CTA */}
             <button
               type="submit"
-              className="w-full mt-3 bg-gradient-to-r from-[#ffe4af] to-[#ffc107] hover:from-[#ffc107] hover:to-[#fabd00] text-[#261a00] font-semibold text-lg rounded-full py-2.5 transition-all duration-300 transform hover:-translate-y-0.5 shadow-[0_4px_20px_rgba(255,193,7,0.15)] hover:shadow-[0_8px_30px_rgba(255,193,7,0.25)] focus:outline-none cursor-pointer"
+              className="w-full py-3 bg-[#1a1a1a] hover:bg-[#333] text-white text-[10px] tracking-[0.22em] uppercase font-semibold transition-colors duration-200 cursor-pointer"
             >
-              Create Account
+              Sign Up
             </button>
 
-            <ContinueWithGoogle />
-
-            <div className="text-center mt-3 pb-2 lg:pb-0">
-              <p className="text-[#9c8f78] text-sm md:text-[15px]">
-                Already have an account?{" "}
-                <span
-                  onClick={() => navigate("/login")}
-                  className="cursor-pointer text-[#ffc107] hover:underline font-medium"
-                >
-                  Sign in
-                </span>
-              </p>
+            {/* OR divider */}
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-px bg-[#e2ddd8]" />
+              <span className="text-[10px] text-[#aaa] tracking-widest">OR</span>
+              <div className="flex-1 h-px bg-[#e2ddd8]" />
             </div>
+
+            <ContinueWithGoogle variant="light" />
+
+            <p className="text-center text-[11px] text-[#999]">
+              Already have an account?{" "}
+              <span
+                onClick={() => navigate("/login")}
+                className="text-[#1a1a1a] font-semibold underline underline-offset-2 cursor-pointer hover:text-[#555]"
+              >
+                Sign in
+              </span>
+            </p>
           </form>
         </div>
       </div>
     </div>
   );
 };
+
+/* ── Reusable underline input ─────────────────────────────────────────────── */
+const UnderlineField = ({ id, name, type, label, placeholder, value, onChange, required, pattern, title }) => (
+  <div className="flex flex-col gap-1">
+    <label
+      htmlFor={id}
+      className="text-[9px] tracking-[0.2em] uppercase font-semibold"
+      style={{ color: "#999" }}
+    >
+      {label}
+    </label>
+    <input
+      id={id} name={name} type={type}
+      value={value} onChange={onChange}
+      placeholder={placeholder} required={required}
+      pattern={pattern} title={title}
+      className="w-full bg-transparent pb-1.5 text-[13px] text-[#1a1a1a] placeholder-[#ccc] outline-none transition-colors duration-150"
+      style={{ borderBottom: "1px solid #ddd" }}
+      onFocus={(e) => (e.target.style.borderBottomColor = "#1a1a1a")}
+      onBlur={(e) => (e.target.style.borderBottomColor = "#ddd")}
+    />
+  </div>
+);
 
 export default Register;

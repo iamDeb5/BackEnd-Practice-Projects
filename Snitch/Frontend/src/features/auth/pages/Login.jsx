@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../hook/useAuth.js";
 import { useNavigate } from "react-router";
 import ContinueWithGoogle from "../components/ContinueWithGoogle.jsx";
+
+/* ─────────────────────────────────────────────────────────────
+   LOGIN PAGE  —  "Enter the Vault"
+   Reference: editorial split-screen, cream right panel,
+   underline inputs, solid dark CTA, Playfair Display headline
+───────────────────────────────────────────────────────────── */
 
 const Login = () => {
   const navigate = useNavigate();
   const { handleLogin } = useAuth();
   const [errorMsg, setErrorMsg] = useState("");
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState({ email: "", password: "" });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,133 +24,180 @@ const Login = () => {
     e.preventDefault();
     setErrorMsg("");
     try {
-      await handleLogin({
-        email: formData.email,
-        password: formData.password,
-      });
+      await handleLogin({ email: formData.email, password: formData.password });
       navigate("/");
-      console.log("Login Form Data:", formData);
     } catch (err) {
       setErrorMsg(err.message);
     }
   };
 
   return (
-    <div className="min-h-screen lg:h-screen lg:overflow-hidden bg-[#0e0e0e] text-[#e5e2e1] flex flex-col lg:flex-row font-sans">
-      {/* Left Panel - Image Area (Desktop Only) */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-[#131313] items-center justify-center overflow-hidden">
+    <div
+      className="h-screen overflow-hidden flex flex-col lg:flex-row"
+      style={{ fontFamily: "'Inter', sans-serif" }}
+    >
+      {/* ── LEFT — editorial photo panel ───────────────────────────────────── */}
+      <div className="hidden lg:block lg:w-[48%] xl:w-1/2 relative flex-shrink-0">
         <img
-          src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=2000&auto=format&fit=crop"
-          alt="Fashion Experience"
-          className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay"
+          src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=90&w=2070&auto=format&fit=crop&crop=top"
+          alt="Snitch fashion"
+          className="absolute inset-0 w-full h-full object-cover object-top"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e] via-[#0e0e0e]/20 to-transparent"></div>
+        {/* Bottom fade */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/5 to-transparent" />
+        {/* Right-edge cream gradient — blends photo into the form panel */}
+        <div
+          className="absolute inset-y-0 right-0 w-36 z-10 pointer-events-none"
+          style={{ background: "linear-gradient(to right, transparent, #FAF8F5)" }}
+        />
 
-        {/* Seamless blend gradient on the right edge */}
-        <div className="absolute inset-y-0 right-0 w-64 bg-gradient-to-l from-[#0e0e0e] to-transparent z-10 pointer-events-none"></div>
-
-        <div className="absolute bottom-16 left-12 lg:bottom-20 lg:left-20 max-w-lg z-20">
-          <div className="w-16 h-1 bg-[#ffc107] mb-5 rounded-full"></div>
-          <h2 className="text-5xl lg:text-6xl font-light mb-5 text-white leading-tight">
-            Welcome <br /> <span className="font-semibold">back.</span>
+        {/* Copy */}
+        <div className="absolute bottom-12 left-10 xl:left-14 right-10 z-10">
+          <p className="text-white/60 text-xs tracking-[0.2em] uppercase mb-3 font-light">
+            Snitch — Fashion Forward
+          </p>
+          <h2
+            className="text-white leading-[1.15] mb-4"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "clamp(2.2rem, 3.5vw, 3.5rem)",
+            }}
+          >
+            Welcome <br />
+            <em>back.</em>
           </h2>
-          <p className="text-[#d4c5ab] text-lg lg:text-xl font-light leading-relaxed">
-            Sign in to continue exploring the exclusive community of creators
-            and shoppers.
+          <p className="text-white/55 text-sm leading-relaxed max-w-xs font-light">
+            Sign in to explore the latest exclusive drops and manage your
+            aesthetic.
           </p>
         </div>
       </div>
 
-      {/* Right Panel - Form Area */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 lg:p-12 xl:p-20 bg-[#0e0e0e] overflow-y-auto lg:overflow-hidden">
-        <div className="w-full max-w-md xl:max-w-lg bg-[#131313] lg:bg-transparent rounded-3xl p-6 lg:p-0 border border-[#201f1f] lg:border-none shadow-2xl lg:shadow-none">
-          <div className="mb-5">
-            <h1 className="text-3xl lg:text-4xl font-light mb-2 tracking-wide">
-              Sign in to{" "}
-              <span className="font-semibold text-[#ffc107]">Snitch</span>
-            </h1>
-            <p className="text-[#a19f9d] text-base font-light">
-              Enter your email and password to access your account.
-            </p>
-            {errorMsg && (
-              <div className="mt-3 p-2.5 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-sm">
-                {errorMsg}
-              </div>
-            )}
-          </div>
+      {/* ── RIGHT — form panel ─────────────────────────────────────────────── */}
+      <div
+        className="flex-1 h-full flex items-center justify-center px-8 sm:px-12 lg:px-12 xl:px-16"
+        style={{ backgroundColor: "#FAF8F5" }}
+      >
+        <div className="w-full max-w-sm">
 
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-3 md:space-y-4 flex flex-col"
+          {/* Eyebrow + headline */}
+          <p
+            className="text-xs tracking-[0.22em] uppercase mb-3 font-semibold"
+            style={{ color: "#C9A96E" }}
           >
-            <div className="space-y-1.5">
-              <label
-                className="text-sm tracking-wide text-[#d4c5ab] ml-1"
-                htmlFor="email"
-              >
-                Email Address
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="you@example.com"
-                className="w-full bg-[#1c1b1b] text-white border border-transparent focus:border-[#ffc107] transition-all rounded-xl px-4 py-2.5 focus:outline-none focus:bg-[#201f1f]"
-                required
-              />
-            </div>
+            Sign In to Snitch
+          </p>
+          <h1
+            className="mb-7 leading-tight text-[#1a1a1a]"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "clamp(1.9rem, 3vw, 2.6rem)",
+            }}
+          >
+            Enter the Vault
+          </h1>
 
-            <div className="space-y-1.5">
-              <div className="flex justify-between items-center ml-1">
+          {/* Error */}
+          {errorMsg && (
+            <div className="mb-5 text-sm text-red-700 bg-red-50 border border-red-200 rounded px-3 py-2.5">
+              {errorMsg}
+            </div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-7">
+
+            {/* Email */}
+            <UnderlineField
+              id="email" name="email" type="email"
+              label="Email Address" placeholder="hello@example.com"
+              value={formData.email} onChange={handleChange}
+              required
+            />
+
+            {/* Password */}
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between">
                 <label
-                  className="text-sm tracking-wide text-[#d4c5ab]"
                   htmlFor="password"
+                  className="text-[10px] tracking-[0.18em] uppercase font-semibold"
+                  style={{ color: "#888" }}
                 >
                   Password
                 </label>
-                <span className="text-xs text-[#ffc107] hover:underline cursor-pointer">
+                <span
+                  className="text-[10px] tracking-wide cursor-pointer hover:text-[#1a1a1a] transition-colors"
+                  style={{ color: "#aaa" }}
+                >
                   Forgot password?
                 </span>
               </div>
               <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="••••••••"
-                className="w-full bg-[#1c1b1b] text-white border border-transparent focus:border-[#ffc107] transition-all rounded-xl px-4 py-2.5 focus:outline-none focus:bg-[#201f1f]"
-                required
+                id="password" name="password" type="password"
+                value={formData.password} onChange={handleChange}
+                placeholder="••••••••" required
+                className="w-full bg-transparent border-0 border-b pb-2 text-sm text-[#1a1a1a] placeholder-[#ccc] outline-none transition-colors duration-150"
+                style={{ borderBottom: "1px solid #ddd" }}
+                onFocus={(e) => (e.target.style.borderBottomColor = "#1a1a1a")}
+                onBlur={(e) => (e.target.style.borderBottomColor = "#ddd")}
               />
             </div>
 
+            {/* CTA */}
             <button
               type="submit"
-              className="cursor-pointer w-full mt-4 bg-gradient-to-r from-[#ffe4af] to-[#ffc107] hover:from-[#ffc107] hover:to-[#fabd00] text-[#261a00] font-semibold text-lg rounded-full py-2.5 transition-all duration-300 transform hover:-translate-y-0.5 shadow-[0_4px_20px_rgba(255,193,7,0.15)] hover:shadow-[0_8px_30px_rgba(255,193,7,0.25)] focus:outline-none"
+              className="w-full py-3.5 bg-[#1a1a1a] hover:bg-[#2e2e2e] text-white text-xs tracking-[0.2em] uppercase font-semibold transition-colors duration-200 cursor-pointer mt-1"
             >
               Sign In
             </button>
 
-            <ContinueWithGoogle />
-
-            <div className="text-center mt-3 pb-2 lg:pb-0">
-              <p className="text-[#9c8f78] text-sm md:text-[15px]">
-                Don't have an account?{" "}
-                <span
-                  onClick={() => navigate("/register")}
-                  className="text-[#ffc107] hover:underline cursor-pointer font-medium"
-                >
-                  Register
-                </span>
-              </p>
+            {/* Divider */}
+            <div className="flex items-center gap-4">
+              <div className="flex-1 h-px bg-[#e0ddd8]" />
+              <span className="text-xs text-[#aaa] tracking-widest">OR</span>
+              <div className="flex-1 h-px bg-[#e0ddd8]" />
             </div>
+
+            {/* Google */}
+            <ContinueWithGoogle variant="light" />
+
+            {/* Switch link */}
+            <p className="text-center text-xs text-[#888] mt-1">
+              Don't have an account?{" "}
+              <span
+                onClick={() => navigate("/register")}
+                className="text-[#1a1a1a] font-medium underline underline-offset-2 cursor-pointer hover:text-[#555]"
+              >
+                Register
+              </span>
+            </p>
           </form>
         </div>
       </div>
     </div>
   );
 };
+
+/* ── Underline input field ────────────────────────────────────────────────── */
+const UnderlineField = ({ id, name, type, label, placeholder, value, onChange, required }) => (
+  <div className="flex flex-col gap-1.5">
+    <label
+      htmlFor={id}
+      className="text-[10px] tracking-[0.18em] uppercase font-semibold"
+      style={{ color: "#888" }}
+    >
+      {label}
+    </label>
+    <input
+      id={id} name={name} type={type}
+      value={value} onChange={onChange}
+      placeholder={placeholder} required={required}
+      className="w-full bg-transparent border-0 border-b pb-2 text-sm text-[#1a1a1a] placeholder-[#ccc] outline-none transition-colors duration-150"
+      style={{ borderBottom: "1px solid #ddd" }}
+      onFocus={(e) => (e.target.style.borderBottomColor = "#1a1a1a")}
+      onBlur={(e) => (e.target.style.borderBottomColor = "#ddd")}
+    />
+  </div>
+);
 
 export default Login;
