@@ -1,9 +1,15 @@
 import { Router } from "express";
 import { validateRegisterUser } from "../validator/auth.validator.js";
-import { register, login, googleCallback } from "../controllers/auth.controller.js";
+import {
+	register,
+	login,
+	googleCallback,
+	getMe,
+} from "../controllers/auth.controller.js";
 import { validateLoginUser } from "../validator/auth.validator.js";
 import passport from "passport";
 import { config } from "../config/config.js";
+import { authenticateUser } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
@@ -19,5 +25,12 @@ router.get(
 	}),
 	googleCallback,
 );
+
+/**
+ * @route GET /api/auth/me
+ * @description Get the authenticated user details
+ * @access Private
+ */
+router.get("/me", authenticateUser, getMe);
 
 export default router;
