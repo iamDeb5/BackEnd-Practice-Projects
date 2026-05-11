@@ -4,18 +4,12 @@ import Login from "../features/auth/pages/Login.jsx";
 import CreateProduct from "../features/products/pages/CreateProduct.jsx";
 import Dashboard from "../features/products/pages/Dashboard.jsx";
 import Protected from "../features/auth/components/Protected.jsx";
+import Home from "../features/products/pages/Home.jsx";
 
 export const routes = createBrowserRouter([
 	{
 		path: "/",
-		element: (
-			<h1
-				className='text-5xl font-bold tracking-[.1em] mt-10 mx-auto w-fit'
-				style={{ color: "#1a1a1a" }}
-			>
-				Welcome to Snitch!
-			</h1>
-		),
+		element: <Home />,
 	},
 	{
 		path: "/register",
