@@ -8,7 +8,14 @@ import Protected from "../features/auth/components/Protected.jsx";
 export const routes = createBrowserRouter([
 	{
 		path: "/",
-		element: <h1>Hello World</h1>,
+		element: (
+			<h1
+				className='text-5xl font-bold tracking-[.1em] mt-10 mx-auto w-fit'
+				style={{ color: "#1a1a1a" }}
+			>
+				Welcome to Snitch!
+			</h1>
+		),
 	},
 	{
 		path: "/register",
