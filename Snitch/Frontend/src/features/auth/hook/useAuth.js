@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { register, login } from "../service/auth.api.js";
+import { register, login, getMe } from "../service/auth.api.js";
 import { setLoading, setError, setUser } from "../state/auth.slice.js";
 
 export const useAuth = () => {
@@ -22,7 +22,7 @@ export const useAuth = () => {
 				isSeller,
 			});
 			dispatch(setUser(data.user));
-			return data;
+			return data.user;
 		} catch (error) {
 			const errorMessage =
 				error.response?.data?.message ||
@@ -40,7 +40,7 @@ export const useAuth = () => {
 			dispatch(setLoading(true));
 			const data = await login({ email, password });
 			dispatch(setUser(data.user));
-			return data;
+			return data.user;
 		} catch (error) {
 			const errorMessage =
 				error.response?.data?.message ||
